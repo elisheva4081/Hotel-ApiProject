@@ -9,10 +9,10 @@ namespace Solid.core.Services
 {
     public interface IPersonService
     {
-        List<Person> GetPersons();
+        IEnumerable<Person> GetPersons();
         Person GetById(int id);
-        void AddPerson(Person person);
-        void UpdatePerson(int id, Person person);
-        void DeletePerson(int id);
+        Task<Person> AddPersonAsync(Person person);
+        Task<Person> UpdatePersonAsync(int id, string name);
+        Task<Person> DeletePersonAsync(int id);
     }
 }

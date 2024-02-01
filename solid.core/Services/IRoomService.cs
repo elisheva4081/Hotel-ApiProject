@@ -11,8 +11,8 @@ namespace Solid.core.Services
     {
         List<Room> GetRooms();
         Room GetById(int id);
-        void AddRoom(Room room);
-        void UpdateRoom(int id, Room room);
-        void DeleteRoom(int id);
+        Task<Room> AddRoomAsync(Room room);
+        Task<Room> UpdateRoomStatusAsync(int id);
+        Task<Room> DeleteRoomAsync(int id);
     }
 }

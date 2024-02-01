@@ -9,40 +9,45 @@ using System.Xml.Linq;
 
 namespace Solid.data.Repository
 {
-    internal class RoomRepository : IRoomRepository
+    public class RoomRepository : IRoomRepository
     {
         private readonly DataContext _context;
-
         public RoomRepository(DataContext context)
         {
             _context = context;
         }
-        public void AddRoom(Room room)
+        public async Task<Room> AddRoomAsync(Room room)
         {
-            _context.Rooms.Add(room);
+            _context.Rooms.AddAsync(room);
+            await _context.SaveChangesAsync();
+            return room;
         }
 
-        public void DeleteRoom(int id)
+        public async Task<Room> DeleteRoomAsync(int id)
         {
-            var r = _context.Rooms.Find(d => d.Id == id);
+            var r = _context.Rooms.Find( id);
             _context.Rooms.Remove(r);
+            await _context.SaveChangesAsync();
+            return r;
         }
 
         public Room GetById(int id)
         {
-            var r = _context.Rooms.Find(d => d.Id == id);
+            var r = _context.Rooms.Find( id);
             return r;
         }
 
         public List<Room> GetRooms()
         {
-            return _context.Rooms;      
+            return _context.Rooms.ToList();      
         }
 
-        public void UpdateRoom(int id, Room room)
+        public async Task<Room> UpdateRoomStatusAsync(int id)
         {
-            var r = _context.Rooms.Find(d => d.Id == id);
-            r = room;
+            var r = _context.Rooms.Find(id);
+            r.Status = !r.Status;
+            await _context.SaveChangesAsync();
+            return r;
         }
     }
 }

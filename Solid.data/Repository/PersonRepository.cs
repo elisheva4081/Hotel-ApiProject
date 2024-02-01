@@ -1,4 +1,5 @@
-﻿using Solid.core.Enentities;
+﻿using Microsoft.EntityFrameworkCore;
+using Solid.core.Enentities;
 using Solid.core.Repositories;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Xml.Linq;
 
 namespace Solid.data.Repository
 {
-    internal class PersonRepository : IPersonRepository
+    public class PersonRepository : IPersonRepository
     {
         private readonly DataContext _context;
 
@@ -17,32 +18,38 @@ namespace Solid.data.Repository
         {
             _context = context;
         }
-        public void AddPerson(Person person)
+        public async Task<Person> AddPersonAsync(Person person)
         {
-            _context.People.Add(person);   
+            await _context.People.AddAsync(person);
+            await _context.SaveChangesAsync();
+            return person;
         }
 
-        public void DeletePerson(int id)
+        public async Task<Person> DeletePersonAsync(int id)
         {
-            var p = _context.People.Find(d => d.Id == id);
-            _context.People.Remove(p);
+            var p = _context.People.Find(id);
+             _context.People.Remove(p);
+            await _context.SaveChangesAsync();
+            return p;
         }
 
         public Person GetById(int id)
         {
-            var p = _context.People.Find(d => d.Id == id);
+            Person p = _context.People.Find(id);
             return p;
         }
 
-        public List<Person> GetPersons()
+        public IEnumerable<Person> GetPersons()
         {
-            return _context.People;
+            return _context.People.ToList();//.Include(p=>p.RoomId);
         }
 
-        public void UpdatePerson(int id, Person person)
+        public async Task<Person> UpdatePersonAsync(int id, string name)
         {
-            var p = _context.People.Find(d => d.Id == id);
-            p= person;
+            var p = _context.People.Find(id);
+            p.Name= name;
+            await _context.SaveChangesAsync();
+            return p;
         }
     }
 }

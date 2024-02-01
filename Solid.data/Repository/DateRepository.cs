@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Solid.data.Repository
 {
-    internal class DateRepository : IDateRepository
+    public class DateRepository : IDateRepository
     {
         private readonly DataContext _context;
 
@@ -17,32 +17,38 @@ namespace Solid.data.Repository
             _context = context;
         }
 
-        public void AddDate(Date date)
+        public async Task<Date> AddDateAsync(Date date)
         {
             _context.Dates.Add(date);
+            await _context.SaveChangesAsync();
+            return date;
         }
 
-        public void DeleteDate(string name)
+        public async Task<Date> DeleteDateAsync(DateTime date)
         {
-            var d = _context.Dates.Find(d => d.NameGuide == name);
+            var d = _context.Dates.Find(date);
             _context.Dates.Remove(d);
+            await _context.SaveChangesAsync();
+            return d;
         }
 
-        public Date GetById(string name)
+        public Date GetById(DateTime date)
         {
-            var d = _context.Dates.Find(d => d.NameGuide == name);
+            var d = _context.Dates.Find(date);
             return d;
         }
 
         public List<Date> GetDates()
         {
-            return _context.Dates;
+            return _context.Dates.ToList();
         }
 
-        public void UpdateDate(string name, Date date)
+        public async Task<Date> UpdateDateAsync(string name, Date date)
         {
-            var d = _context.Dates.Find(d => d.NameGuide == name);
-            d = date;
+            var d = _context.Dates.Find(date);
+            d.NameGuide = name;
+            await _context.SaveChangesAsync();
+            return d;
         }
     }
 }
