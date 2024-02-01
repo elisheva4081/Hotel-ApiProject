@@ -8,8 +8,10 @@
 
 מיפוי Routes לאנשים:
 
+
 שליפת רשימת האנשים:
 https://hotel/api/person
+
 שליפת נתונים על אדם מסוים:
 
 https://hotel/api/person/{id}
